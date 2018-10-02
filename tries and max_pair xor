@@ -1,0 +1,83 @@
+#include <iostream>
+using namespace std;
+#include<bits/stdc++.h>
+class trinode
+{
+    public:
+ trinode *left;
+ trinode *right;
+};
+void insert(trinode *head,int n)
+{
+trinode* current=head;
+for(int i=31;i>=0;i--)
+{
+    int bit=(n>>i)&1;
+    if(bit==0)
+    {
+        if(!current->left)
+        {
+            current->left=new trinode();
+        }
+        current=current->left;
+    }
+    else
+    {
+        if(!current->right)
+        {
+            current->right=new trinode();
+        }
+        current=current->right;
+    }
+}
+
+}
+int findmax(trinode *head,int *arr,int n)
+{
+    int max_xor=INT_MIN;
+    for(int i=0;i<n;i++)
+    {
+        
+        trinode *current =head;
+        int current_xor=0;
+        for(int j=31;j>=0;j--)
+        {
+            int bit=(arr[i]>>j)&1;
+            if(bit==0)
+            {
+                if(current->right)
+                {
+                    current_xor+=pow(2,j);
+                    current=current->right;
+                }
+                else
+                {
+                    current=current->left;
+                }
+            }
+            else{
+                 if(current->left)
+                {
+                    current_xor+=pow(2,j);
+                    current=current->left;
+                }
+                else
+                {
+                    current=current->right;
+                }
+            }
+        }
+        if(current_xor>max_xor)
+        max_xor=current_xor;
+        
+    }
+    return max_xor;
+}
+int main() {
+	int arr[6]={10,5,8,1,2,15};
+	trinode *head=new trinode();
+	for(int i=0;i<6;i++)
+	    insert(head,i);
+	std::cout << findmax(head,arr,6) << std::endl;
+	return 0;
+}
