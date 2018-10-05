@@ -1,0 +1,72 @@
+#include <iostream>
+using namespace std;
+class trinode{
+    public:
+    int weight;
+    trinode** children;
+    trinode()
+    {
+        children=new trinode*[26];
+        for(int i=0;i<26;i++)
+            children[i]=NULL;
+        weight=0;
+    }
+};
+void insert(trinode *head,string s,int weight)
+{
+    if(s[0]=='\0')
+    return;
+    
+    int val=s[0]-'a';
+    trinode* child;
+
+    if(head->children[val])
+    {
+        child=head->children[val];
+    }
+    else
+    {
+       child=new trinode();
+       head->children[val]=child;
+    }
+    if(head->weight<weight)
+    head->weight=weight;
+    
+    insert(child,s.substr(1),weight);
+}
+int search(string s,trinode* head){
+    int max=-1;
+    trinode *current=head;
+for(int i=0;i<s.length();i++)
+{
+    int val=s[i]-'a';
+    if(current->children[val]==NULL)
+    return -1;
+    else
+    {
+        
+        current=current->children[val];
+      	max=current->weight;
+    }
+}
+    return max;
+}
+int main() {
+int n,q;
+cin>>n>>q;
+trinode *head=new trinode();
+while(n--)
+{
+    string s;
+    int weight;
+    cin>>s>>weight;
+    insert(head,s,weight);
+}
+while(q--)
+{
+    string s;
+    cin>>s;
+    std::cout << search(s,head) << std::endl;
+}
+	return 0;
+}
