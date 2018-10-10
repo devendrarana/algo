@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+
+#include <bits/stdc++.h>
+struct Item{
+    int v;
+    int w;
+    double vw;
+};
+bool fn(Item a,Item b)
+{
+    return (a.vw<b.vw);
+}
+double fknapsack(struct Item Ar[],int weight,int n)
+{
+    sort(Ar,Ar+n,fn);
+    double value=0;
+	for(int i=n-1;i>=0;i--)
+	{
+	    if(weight>=Ar[i].w)
+	    {
+	        weight=weight-Ar[i].w;
+	        value+=Ar[i].v;
+	    }
+	    else
+	    {
+	        value+=(Ar[i].vw)*weight;
+	        break;
+	    }
+	}
+}
+int main() {
+	int n;
+	cin>>n;
+	Item Ar[n];
+	for(int i=0;i<n;i++)
+	{
+	    cin>>Ar[i].v;
+	    cin>>Ar[i].w;
+	    Ar[i].vw=(double)Ar[i].v/Ar[i].w;
+	}
+	sort(Ar,Ar+n,fn);
+	int weight;
+	cin>>weight;
+	std::cout << fknapsack(Ar,weight,n) << std::endl;
+	return 0;
+}
