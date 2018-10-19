@@ -1,0 +1,54 @@
+#include <iostream>
+using namespace std;
+
+void buildtree(int ar[],int* tree,int srt,int end,int treenode)
+{
+    if(srt==end)
+    {
+        tree[treenode]=ar[srt];
+        return;
+    }
+    int mid=(srt+end)/2;
+    buildtree(ar,tree,srt,mid,2*treenode);
+    buildtree(ar,tree,mid+1,end,2*treenode+1);
+    tree[treenode]=tree[2*treenode]+tree[2*treenode+1];
+}
+void update(int *ar,int *tree,int srt,int end,int treenode,int idx,int value)
+{
+    if(srt==end)
+    {
+        ar[idx]=value;
+        tree[treenode]=value;
+        return;
+    }
+    int mid=(srt+end)/2;
+    if(idx>mid)
+    update(ar,tree,mid+1,end,2*treenode+1,idx,value);
+    else
+    update(ar,tree,srt,mid,2*treenode,idx,value);
+    
+    tree[treenode]=tree[2*treenode]+tree[2*treenode+1];
+    
+    
+}
+int query(int *tree,int srt,int end,int treenode,int left,int right)
+{
+    if(end<left||srt>right)
+        return 0;
+    if(srt>=left&&end<=right)
+        return tree[treenode];
+   int mid=(srt+end)/2;
+   int ans1=query(tree,srt,mid,2*treenode,left,right);
+   int ans2=query(tree,mid+1,end,2*treenode+1,left,right);
+    return ans1+ans2;
+}
+int main() {
+int ar[]={1,2,3,4,5};
+int* tree=new int[10];
+buildtree(ar,tree,0,4,1);
+update(ar,tree,0,4,1,2,10);
+for(int i=1;i<10;i++)
+std::cout << tree[i] << std::endl;
+cout<<"the ans is"<<query(tree,0,4,1,2,4);
+	return 0;
+}
